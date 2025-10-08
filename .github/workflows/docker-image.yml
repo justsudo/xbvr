@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-  workflow_dispatch:  # allows manual trigger
+  workflow_dispatch:
 
 jobs:
   build-and-publish:
@@ -13,8 +13,8 @@ jobs:
 
     permissions:
       contents: read
-      packages: write  # needed to push to GHCR
-      id-token: write  # required for GHCR authentication (OIDC)
+      packages: write
+      id-token: write
 
     env:
       REGISTRY: ghcr.io
@@ -47,7 +47,7 @@ jobs:
           yarn build
 
       - name: Build and push Docker image
-        id: build-and-push
+        id: build_and_push
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -58,4 +58,5 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
       - name: Show image digest
-        run: echo "Image digest: ${{ steps.build-and-push.outputs.digest }}"
+        run: |
+          echo "Image digest: ${{ steps.build_and_push.outputs.digest }}"
