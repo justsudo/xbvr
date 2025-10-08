@@ -32,11 +32,9 @@ jobs:
           go-version: stable
       - name: Update Go modules
         run: |
-          echo "Updating Go modules to latest patch versions..."
+          echo "Tidying Go modules..."
           go mod tidy
-          # Update all dependencies to latest patch versions
-          go get -u=patch ./...
-          go mod tidy
+          go mod download
           git diff go.mod go.sum || true
       - name: Build Go binary
         run: |
