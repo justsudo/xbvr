@@ -38,11 +38,11 @@ jobs:
         with:
           go-version: stable
 
-      - name: Update Go modules to latest
+      - name: Update Go modules
         run: |
-          echo "Updating Go modules to latest versions..."
+          echo "Updating Go modules to latest patch versions..."
           go mod tidy
-          go get -u ./...
+          go get -u=patch ./...    # Only patch versions, no minor/major
           go mod tidy
           git diff go.mod go.sum || true
 
