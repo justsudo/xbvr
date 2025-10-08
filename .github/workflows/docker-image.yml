@@ -42,7 +42,8 @@ jobs:
         run: |
           echo "Updating Go modules to latest patch versions..."
           go mod tidy
-          go get -u=patch ./...    # Only patch versions, no minor/major
+          # Update only direct dependencies
+          go list -m -f '{{if not (or .Indirect .Main)}}{{.Path}}{{end}}' all | xargs go get -u=patch
           go mod tidy
           git diff go.mod go.sum || true
 
