@@ -8,7 +8,6 @@ on:
 
 jobs:
   build-and-publish:
-    name: Build and Push Docker Image to GHCR
     runs-on: ubuntu-latest
 
     permissions:
@@ -26,6 +25,12 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
+
+      - name: Verify repository structure
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "List of files:"
+          ls -al
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -45,12 +50,14 @@ jobs:
           cd ui
           yarn install --ignore-engines
           yarn build
+          cd ..
 
       - name: Build and push Docker image
         id: build_and_push
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: ./Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
