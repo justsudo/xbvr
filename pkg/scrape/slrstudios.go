@@ -402,6 +402,8 @@ func SexLikeReal(wg *models.ScrapeWG, updateSite bool, knownScenes []string, out
 		page := 1
 		perPage := 36
 		hasMore := true
+		consecutiveFailures := 0  // Add this
+   		maxFailures := 3          // Add this
 
 		for hasMore && (!limitScraping || page == 1) {
 			apiURL := "https://api.sexlikereal.com/v3/scenes?studios=" + studioCode + "&perPage=" + strconv.Itoa(perPage) + "&sort=mostRecent&page=" + strconv.Itoa(page)
@@ -419,13 +421,27 @@ func SexLikeReal(wg *models.ScrapeWG, updateSite bool, knownScenes []string, out
 
 			if err != nil {
 				log.Errorln("Failed to fetch API scenes for studio", studioCode, "page", page, ":", err)
-				break
+	            consecutiveFailures++  // Add this
+	            if consecutiveFailures >= maxFailures {  // Add this
+	                log.Errorln("Max consecutive failures reached, stopping pagination")
+	                break
+	            }
+	            page++  // Try next page instead of breaking immediately
+	            continue
 			}
 
 			if resp.StatusCode() != 200 {
 				log.Errorln("API returned non-200 status for studio", studioCode, ":", resp.StatusCode())
-				break
+	            consecutiveFailures++  // Add this
+	            if consecutiveFailures >= maxFailures {  // Add this
+	                log.Errorln("Max consecutive failures reached, stopping pagination")
+	                break
+	            }
+	            page++  // Try next page instead of breaking immediately
+	            continue
 			}
+
+			consecutiveFailures = 0  // Reset on success
 
 			apiData := resp.String()
 			scenes := gjson.Get(apiData, "data")
