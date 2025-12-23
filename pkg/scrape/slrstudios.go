@@ -433,7 +433,7 @@ func SexLikeReal(wg *models.ScrapeWG, updateSite bool, knownScenes []string, out
 			// Get total pages from metadata
 			if totalPages == 0 {
 				totalPages = int(gjson.Get(apiData, "meta.pagination.totalPages").Int())
-				log.Debugln("Total pages for studio", studioCode, ":", totalPages)
+				log.Infoln("Total pages for studio", studioCode, ":", totalPages)
 			}
 
 			if !scenes.Exists() || !scenes.IsArray() {
