@@ -12,7 +12,7 @@ var Assets embed.FS
 
 func GetFileSystem(useOS bool) http.FileSystem {
 	if useOS {
-		return http.Dir("dist")
+		return http.Dir("ui/dist")
 	}
 
 	fs, err := fs.Sub(Assets, "dist")
