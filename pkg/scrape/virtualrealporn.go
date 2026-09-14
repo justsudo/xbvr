@@ -4,15 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"image"
 	"net/url"
-
-	// image.Decode below only recognises formats whose decoder has been registered.
-	// This package registers none of its own, so cover validation silently rejected
-	// every image except in builds that happened to pull in a decoder elsewhere.
-	_ "image/gif"
-	_ "image/jpeg"
-	_ "image/png"
 	"strconv"
 	"strings"
 
@@ -38,16 +30,8 @@ func VirtualRealPornSite(wg *models.ScrapeWG, updateSite bool, knownScenes []str
 	defer wg.Done()
 	logScrapeStart(scraperID, siteID)
 
-	// Covers and gallery images are served from static.virtualrealhub.com (new site CDN)
-	imageCollector := createCollector("virtualrealporn.com", "virtualrealtrans.com", "virtualrealgay.com", "virtualrealpassion.com", "virtualrealamateurporn.com", "static.virtualrealhub.com")
 	sceneCollector := createCollector("virtualrealporn.com", "virtualrealtrans.com", "virtualrealgay.com", "virtualrealpassion.com", "virtualrealamateurporn.com")
 	siteCollector := createCollector("virtualrealporn.com", "virtualrealtrans.com", "virtualrealgay.com", "virtualrealpassion.com", "virtualrealamateurporn.com")
-
-	imageCollector.OnResponse(func(r *colly.Response) {
-		if _, _, err := image.Decode(bytes.NewReader(r.Body)); err == nil {
-			r.Ctx.Put("valid", "1")
-		}
-	})
 
 	sceneCollector.OnHTML(`html`, func(e *colly.HTMLElement) {
 		sc := models.ScrapedScene{}
@@ -75,11 +59,8 @@ func VirtualRealPornSite(wg *models.ScrapeWG, updateSite bool, knownScenes []str
 		e.ForEach(`meta[property="og:image"]`, func(id int, e *colly.HTMLElement) {
 			if len(sc.Covers) == 0 {
 				u := strings.Split(e.Request.AbsoluteURL(e.Attr("content")), "?")[0]
-				ctx := colly.NewContext()
-				if err := imageCollector.Request("GET", u, nil, ctx, nil); err == nil {
-					if ctx.Get("valid") != "" {
-						sc.Covers = append(sc.Covers, u)
-					}
+				if u != "" {
+					sc.Covers = append(sc.Covers, u)
 				}
 			}
 		})
