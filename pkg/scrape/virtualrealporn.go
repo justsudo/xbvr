@@ -5,6 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"image"
+	// image.Decode below only recognises formats whose decoder has been registered.
+	// This package registers none of its own, so cover validation silently rejected
+	// every image except in builds that happened to pull in a decoder elsewhere.
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 	"strconv"
 	"strings"
 
@@ -19,7 +25,8 @@ func VirtualRealPornSite(wg *models.ScrapeWG, updateSite bool, knownScenes []str
 	logScrapeStart(scraperID, siteID)
 	page := 1
 
-	imageCollector := createCollector("virtualrealporn.com", "virtualrealtrans.com", "virtualrealgay.com", "virtualrealpassion.com", "virtualrealamateurporn.com")
+	// Covers and gallery images are served from static.virtualrealhub.com (new site CDN)
+	imageCollector := createCollector("virtualrealporn.com", "virtualrealtrans.com", "virtualrealgay.com", "virtualrealpassion.com", "virtualrealamateurporn.com", "static.virtualrealhub.com")
 	sceneCollector := createCollector("virtualrealporn.com", "virtualrealtrans.com", "virtualrealgay.com", "virtualrealpassion.com", "virtualrealamateurporn.com")
 	siteCollector := createCollector("virtualrealporn.com", "virtualrealtrans.com", "virtualrealgay.com", "virtualrealpassion.com", "virtualrealamateurporn.com")
 
@@ -64,9 +71,13 @@ func VirtualRealPornSite(wg *models.ScrapeWG, updateSite bool, knownScenes []str
 			}
 		})
 
-		// Gallery (screenshots grid)
-		e.ForEach(`div.vd-screenshots__grid img`, func(id int, e *colly.HTMLElement) {
-			u := e.Request.AbsoluteURL(strings.Split(e.Attr("src"), "?")[0])
+		// Gallery (screenshots grid) - full image is on the anchor href; <img> is lazy-loaded
+		e.ForEach(`a.vd-screenshots__item`, func(id int, e *colly.HTMLElement) {
+			u := e.Attr("href")
+			if u == "" {
+				u = e.Attr("data-gallery-src")
+			}
+			u = e.Request.AbsoluteURL(strings.Split(u, "?")[0])
 			if u != "" {
 				sc.Gallery = append(sc.Gallery, u)
 			}
@@ -83,7 +94,10 @@ func VirtualRealPornSite(wg *models.ScrapeWG, updateSite bool, knownScenes []str
 		// Cast - from pornstar sections (new site)
 		sc.ActorDetails = make(map[string]models.ActorDetails)
 		e.ForEach(`div.vd-pornstar`, func(id int, e *colly.HTMLElement) {
+			// The new site appends a " VR" suffix to every performer name; strip it so
+			// we don't create a duplicate actor alongside the existing record.
 			name := strings.TrimSpace(e.DOM.Find("span.vd-pornstar__name").Text())
+			name = strings.TrimSpace(strings.TrimSuffix(name, " VR"))
 			profileURL := e.Request.AbsoluteURL(e.DOM.Find("a.vd-pornstar__link").AttrOr("href", ""))
 			if name != "" {
 				sc.Cast = append(sc.Cast, name)
@@ -180,16 +194,17 @@ func VirtualRealPornSite(wg *models.ScrapeWG, updateSite bool, knownScenes []str
 			sc.Filenames = outFilenames
 		}
 
-		// Trailer setup
+		// Trailer setup. The JSON-LD VideoObject no longer carries a "trailer" object,
+		// so read the stream sources off the dl8 player element instead (same shape as badoink).
 		params := models.TrailerScrape{
 			SceneUrl:       sc.HomepageURL,
-			HtmlElement:    `script[type="application/ld+json"]`,
-			ContentPath:    "trailer.contentUrl",
-			QualityPath:    "trailer.videoQuality",
+			HtmlElement:    "dl8-video source",
+			ContentPath:    "src",
+			QualityPath:    "quality",
 			ContentBaseUrl: URL,
 		}
 		tmp, _ := json.Marshal(params)
-		sc.TrailerType = "scrape_json"
+		sc.TrailerType = "scrape_html"
 		sc.TrailerSrc = string(tmp)
 
 		if sc.SceneID != "" {
