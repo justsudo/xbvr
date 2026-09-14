@@ -36,12 +36,13 @@ jobs:
           go mod tidy
           go mod download
           git diff go.mod go.sum || true
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Build UI
         run: |
-          cd ui
-          yarn install --ignore-engines
-          yarn build
-          cd ..
+          pnpm install
+          pnpm build
       - name: Verify UI build
         run: |
           echo "UI build directory:"

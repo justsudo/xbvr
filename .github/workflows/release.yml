@@ -24,8 +24,11 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Build UI
-        run:  cd ui && yarn install --ignore-engines && yarn build
+        run: pnpm install && pnpm build
 
       - name: Setup release environment
         run: |-

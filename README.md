@@ -75,16 +75,16 @@ Make sure you have following installed:
 
 - Go 1.24
 - Node.js 22.x
-- Yarn 1.17.x
+- pnpm
 - air (run `go install github.com/cosmtrek/air@latest` outside project directory)
 
-Once all of the above is installed, running `yarn dev` from project directory launches file-watchers providing livereload for both Go and JavaScript.
+Once all of the above is installed, running `pnpm dev` from project directory launches file-watchers providing livereload for both Go and JavaScript.
 
 ## Development in Gitpod
 
 This project is configured for use in Gitpod. It will provide you with a pre-built development environment with all the tools needed to compile XBVR.
 
-When the workspace loads, `yarn dev` runs and it will build and start XBVR automatically. Every time you make a change to a file, watchers will automatically compile the relevant code.
+When the workspace loads, `pnpm dev` runs and it will build and start XBVR automatically. Every time you make a change to a file, watchers will automatically compile the relevant code.
 
 Once XBVR is compiled and starts, a preview panel will open in the IDE. As you modify go files, the preview panel will reload with the latest changes. If you make changes to Vue, you'll need to reload the browser to load the updated JavaScript.
 
