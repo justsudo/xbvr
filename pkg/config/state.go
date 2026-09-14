@@ -40,6 +40,7 @@ type ObjectState struct {
 		SceneCardScaleToFit  bool   `json:"sceneCardScaleToFit"`
 		ActorCardAspectRatio string `json:"actorCardAspectRatio"`
 		ActorCardScaleToFit  bool   `json:"actorCardScaleToFit"`
+		Theme                string `json:"theme"`
 	} `json:"web"`
 	DLNA struct {
 		Running  bool     `json:"running"`

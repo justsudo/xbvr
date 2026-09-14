@@ -35,6 +35,17 @@
           </tr>
         </table>
       </b-navbar-item>
+      <b-navbar-item>
+        <b-button
+          size="is-small"
+          :type="isDarkMode ? 'is-dark' : 'is-light'"
+          :icon-left="isDarkMode ? 'weather-night' : 'weather-sunny'"
+          icon-pack="mdi"
+          :title="isDarkMode ? $t('Switch to Light Theme') : $t('Switch to Dark Theme')"
+          @click="$store.dispatch('optionsWeb/toggleTheme')"
+          class="theme-toggle-btn"
+        />
+      </b-navbar-item>
     </template>
   </b-navbar>
 </template>
@@ -61,6 +72,12 @@ export default {
     },
     lastScrapeMessage () {
       return this.$store.state.messages.lastScrapeMessage
+    },
+    isDarkMode () {
+      const t = this.$store.state.optionsWeb.web.theme
+      if (t === 'dark') return true
+      if (t === 'light') return false
+      return typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
     }
   },
   mounted () {

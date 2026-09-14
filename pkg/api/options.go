@@ -65,6 +65,7 @@ type RequestSaveOptionsWeb struct {
 	SceneCardScaleToFit  bool   `json:"sceneCardScaleToFit"`
 	ActorCardAspectRatio string `json:"actorCardAspectRatio"`
 	ActorCardScaleToFit  bool   `json:"actorCardScaleToFit"`
+	Theme                string `json:"theme"`
 }
 
 type RequestSaveOptionsAdvanced struct {
@@ -528,6 +529,9 @@ func (i ConfigResource) saveOptionsWeb(req *restful.Request, resp *restful.Respo
 	config.Config.Web.SceneCardScaleToFit = r.SceneCardScaleToFit
 	config.Config.Web.ActorCardAspectRatio = r.ActorCardAspectRatio
 	config.Config.Web.ActorCardScaleToFit = r.ActorCardScaleToFit
+	if r.Theme != "" {
+		config.Config.Web.Theme = r.Theme
+	}
 	config.SaveConfig()
 
 	resp.WriteHeaderAndEntity(http.StatusOK, r)

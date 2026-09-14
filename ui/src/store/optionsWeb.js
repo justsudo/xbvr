@@ -1,5 +1,42 @@
 import ky from 'ky'
 
+function getBrowserTheme () {
+  if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return 'dark'
+  }
+  return 'light'
+}
+
+function resolveTheme (theme) {
+  if (theme === 'dark' || theme === 'light') {
+    return theme
+  }
+  return getBrowserTheme()
+}
+
+function applyTheme (theme) {
+  if (typeof document !== 'undefined') {
+    const active = resolveTheme(theme)
+    if (active === 'dark') {
+      document.documentElement.classList.add('theme-dark')
+    } else {
+      document.documentElement.classList.remove('theme-dark')
+    }
+  }
+}
+
+const savedTheme = typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : null
+const initialTheme = savedTheme || getBrowserTheme()
+applyTheme(initialTheme)
+
+if (typeof window !== 'undefined' && window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (!localStorage.getItem('theme')) {
+      applyTheme(e.matches ? 'dark' : 'light')
+    }
+  })
+}
+
 const state = {
   loading: false,
   web: {
@@ -24,14 +61,22 @@ const state = {
     sceneCardScaleToFit: true,
     actorCardAspectRatio: "1:1",
     actorCardScaleToFit: true,
-    updateCheck: true
+    theme: initialTheme
   }
 }
 
-const mutations = {}
+const mutations = {
+  setTheme (state, theme) {
+    state.web.theme = theme
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('theme', theme)
+    }
+    applyTheme(theme)
+  }
+}
 
 const actions = {
-  async load ({ state }) {
+  async load ({ state, commit }) {
     state.loading = true
     ky.get('/api/options/state')
       .json()
@@ -57,10 +102,15 @@ const actions = {
         state.web.sceneCardScaleToFit = data.config.web.sceneCardScaleToFit
         state.web.actorCardAspectRatio = data.config.web.actorCardAspectRatio
         state.web.actorCardScaleToFit = data.config.web.actorCardScaleToFit
+        if (data.config.web.theme) {
+          commit('setTheme', data.config.web.theme)
+        } else if (!savedTheme) {
+          commit('setTheme', getBrowserTheme())
+        }
         state.loading = false
       })
   },
-  async save ({ state }) {
+  async save ({ state, commit }) {
     state.loading = true
     ky.put('/api/options/interface/web', { json: { ...state.web } })
       .json()
@@ -86,8 +136,20 @@ const actions = {
         state.web.sceneCardScaleToFit = data.sceneCardScaleToFit
         state.web.actorCardAspectRatio = data.actorCardAspectRatio
         state.web.actorCardScaleToFit = data.actorCardScaleToFit
+        if (data.theme) {
+          commit('setTheme', data.theme)
+        }
         state.loading = false
       })
+  },
+  toggleTheme ({ state, dispatch }) {
+    const currentTheme = resolveTheme(state.web.theme)
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
+    dispatch('setTheme', newTheme)
+  },
+  setTheme ({ commit, dispatch }, theme) {
+    commit('setTheme', theme)
+    dispatch('save')
   }
 }
 

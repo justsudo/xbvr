@@ -1,13 +1,12 @@
+import Buefy from 'buefy'
 import Vue from 'vue'
+import vueDebounce from 'vue-debounce'
 import App from './App.vue'
+import i18n from './i18n'
 import router from './router'
 import store from './store'
-import i18n from './i18n'
-
-import vueDebounce from 'vue-debounce'
-
-import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
+import './dark-theme.scss'
 
 import 'video.js/dist/video-js.css'
 import 'videojs-vr/dist/videojs-vr.css'

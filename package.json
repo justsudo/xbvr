@@ -20,6 +20,7 @@
     "date-fns": "4.1.0",
     "ky": "0.30.0",
     "pretty-bytes": "7.1.0",
+    "video.js": "7.21.5",
     "videojs-hotkeys": "0.2.30",
     "videojs-vr": "1.8.0",
     "vue": "2.7.16",
@@ -36,14 +37,14 @@
     "wampy": "6.4.2"
   },
   "devDependencies": {
-    "@babel/core": "7.29.0",
+    "@babel/core": "7.29.7",
     "@babel/eslint-parser": "7.28.6",
     "@vue/cli-plugin-babel": "5.0.9",
     "@vue/cli-plugin-eslint": "5.0.9",
     "@vue/cli-service": "5.0.9",
     "@vue/eslint-config-standard": "9.0.1",
     "buffer": "6.0.3",
-    "concurrently": "9.2.1",
+    "concurrently": "9.2.4",
     "eslint": "9.39.4",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-n": "17.24.0",
@@ -60,8 +61,18 @@
     "vue-template-compiler": "2.7.16",
     "webpack": "5.106.2"
   },
+  "overrides": {
+    "shell-quote": "^1.8.5",
+    "serialize-javascript": "^7.0.5",
+    "cross-spawn": "^7.0.6",
+    "qs": "^6.15.4"
+  },
   "resolutions": {
-    "@achrinza/node-ipc": "9.2.10"
+    "@achrinza/node-ipc": "9.2.10",
+    "shell-quote": "^1.8.5",
+    "serialize-javascript": "^7.0.5",
+    "cross-spawn": "^7.0.6",
+    "qs": "^6.15.4"
   },
   "eslintConfig": {
     "root": true,
