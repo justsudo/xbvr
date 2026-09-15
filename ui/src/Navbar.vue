@@ -119,20 +119,33 @@ export default {
   }
 
   .pulsate {
-    -webkit-animation: pulsate 0.5s linear;
-    -webkit-animation-iteration-count: infinite;
-    opacity: 0.5;
+    animation: pulsate 0.8s ease-in-out infinite;
+    -webkit-animation: pulsate 0.8s ease-in-out infinite;
+    opacity: 0.6;
+    display: inline-block;
   }
 
-  @-webkit-keyframes pulsate {
+  @keyframes pulsate {
     0% {
-      opacity: 0.5;
+      opacity: 0.6;
     }
     50% {
       opacity: 1.0;
     }
     100% {
-      opacity: 0.5;
+      opacity: 0.6;
+    }
+  }
+
+  @-webkit-keyframes pulsate {
+    0% {
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 1.0;
+    }
+    100% {
+      opacity: 0.6;
     }
   }
 </style>

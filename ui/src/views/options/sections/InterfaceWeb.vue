@@ -37,7 +37,7 @@
               </b-switch>
             </b-field>
             <b-field>
-              <b-switch v-model="sceneWatchlist" type="is-default">
+              <b-switch v-model="sceneWatchlist">
                 show Add/Remove from Watchlist button
               </b-switch>
             </b-field>
@@ -52,52 +52,52 @@
               </b-switch>
             </b-field>
             <b-field>
-              <b-switch v-model="sceneTrailerlist" type="is-default">
+              <b-switch v-model="sceneTrailerlist">
                 show Add/Remove from Trailer list button
               </b-switch>
             </b-field>
             <b-field>
-              <b-switch v-model="sceneWatched" type="is-dark">
+              <b-switch v-model="sceneWatched">
                 show Toggle Watched Status button
               </b-switch>
             </b-field>
             <b-field>
-              <b-switch v-model="sceneEdit" type="is-dark">
+              <b-switch v-model="sceneEdit">
                 show Edit Scene button
               </b-switch>
             </b-field>
             <b-field>
-              <b-switch v-model="sceneDuration" type="is-dark">
+              <b-switch v-model="sceneDuration">
                 show Duration button
               </b-switch>
             </b-field>
             <b-field>
-              <b-switch v-model="sceneCuepoint" type="is-dark">
+              <b-switch v-model="sceneCuepoint">
                 show Cuepoints button
               </b-switch>
             </b-field>
             <b-field>
-              <b-switch v-model="hspFile" type="is-dark">
+              <b-switch v-model="hspFile">
                 show Hsp File button
               </b-switch>
             </b-field>
             <b-field>
-              <b-switch v-model="subtitlesFile" type="is-dark">
+              <b-switch v-model="subtitlesFile">
                 show subtitles File button
               </b-switch>
             </b-field>
             <b-field>
-              <b-switch v-model="ScriptHeatmap" type="is-dark">
+              <b-switch v-model="ScriptHeatmap">
                 show Script Heatmap
               </b-switch>
             </b-field>
             <b-field v-if="ScriptHeatmap">
-              <b-switch v-model="AllHeatmaps" type="is-dark">
+              <b-switch v-model="AllHeatmaps">
                 show All Heatmaps
               </b-switch>
             </b-field>
             <b-field>
-              <b-switch v-model="openInNewWindow" type="is-dark">
+              <b-switch v-model="openInNewWindow">
                 show Open Tag in New Window
               </b-switch>
             </b-field>
@@ -117,7 +117,7 @@
               </b-select>
             </b-field>
             <b-field>
-              <b-switch v-model="sceneCardScaleToFit" type="is-dark">
+              <b-switch v-model="sceneCardScaleToFit">
                 Scale cover to fit
               </b-switch>
             </b-field>
@@ -130,7 +130,7 @@
               </b-select>
             </b-field>
             <b-field>
-              <b-switch v-model="actorCardScaleToFit" type="is-dark">
+              <b-switch v-model="actorCardScaleToFit">
                 Scale cover to fit
               </b-switch>
             </b-field>

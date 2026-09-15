@@ -32,9 +32,21 @@ html.theme-dark {
 
   // Typography
   h1, h2, h3, h4, h5, h6,
-  .title, .subtitle,
-  .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+  .title,
+  .content h1, .content h2, .content h3, .content h4, .content h5, .content h6,
+  .content .title,
+  .hero .title {
     color: #f1f1f1;
+  }
+
+  .subtitle,
+  .content .subtitle,
+  .hero .subtitle {
+    color: #c0c0c0;
+  }
+
+  .content p, .content strong, .content span, .content li {
+    color: #e0e0e0;
   }
 
   strong {
@@ -103,6 +115,24 @@ html.theme-dark {
     .navbar-menu {
       background-color: #1b1b1b;
     }
+
+    table {
+      color: #e0e0e0;
+
+      th {
+        color: #f1f1f1;
+      }
+
+      td {
+        color: #c0c0c0;
+      }
+    }
+
+    .pulsate {
+      color: #fc3ec8 !important;
+      font-weight: 700;
+      text-shadow: 0 0 8px rgba(252, 62, 200, 0.6);
+    }
   }
 
   // Cards
@@ -165,8 +195,86 @@ html.theme-dark {
   }
 
   // Form Controls
-  .label {
+  .label,
+  .field-label .label,
+  .list-header-label {
     color: #e0e0e0;
+    font-weight: 600;
+  }
+
+  .field.is-floating-label .label,
+  .field.is-floating-in-label .label,
+  .field.has-label-on-border .label,
+  .is-floating-label .label {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+    padding: 0 6px;
+    z-index: 5;
+  }
+
+  .field.is-floating-label .label:before,
+  .field.is-floating-label .label::before,
+  .field.is-floating-in-label .label:before,
+  .field.is-floating-in-label .label::before,
+  .field.has-label-on-border .label:before,
+  .field.has-label-on-border .label::before,
+  .is-floating-label .label:before,
+  .is-floating-label .label::before {
+    background-color: #121212 !important;
+  }
+
+  .box .field.is-floating-label .label,
+  .box .field.is-floating-in-label .label,
+  .box .is-floating-label .label {
+    background-color: #1c1c1c !important;
+  }
+
+  .box .field.is-floating-label .label:before,
+  .box .field.is-floating-label .label::before,
+  .box .field.is-floating-in-label .label:before,
+  .box .field.is-floating-in-label .label::before,
+  .box .is-floating-label .label:before,
+  .box .is-floating-label .label::before {
+    background-color: #1c1c1c !important;
+  }
+
+  .card .field.is-floating-label .label,
+  .card .field.is-floating-in-label .label,
+  .card .is-floating-label .label {
+    background-color: #181818 !important;
+  }
+
+  .card .field.is-floating-label .label:before,
+  .card .field.is-floating-label .label::before,
+  .card .field.is-floating-in-label .label:before,
+  .card .field.is-floating-in-label .label::before,
+  .card .is-floating-label .label:before,
+  .card .is-floating-label .label::before {
+    background-color: #181818 !important;
+  }
+
+  .modal-card .field.is-floating-label .label,
+  .modal-card .field.is-floating-in-label .label,
+  .modal-card-body .field.is-floating-label .label,
+  .modal-card-body .field.is-floating-in-label .label,
+  .modal-card .is-floating-label .label,
+  .modal-card-body .is-floating-label .label {
+    background-color: #1c1c1c !important;
+  }
+
+  .modal-card .field.is-floating-label .label:before,
+  .modal-card .field.is-floating-label .label::before,
+  .modal-card .field.is-floating-in-label .label:before,
+  .modal-card .field.is-floating-in-label .label::before,
+  .modal-card-body .field.is-floating-label .label:before,
+  .modal-card-body .field.is-floating-label .label::before,
+  .modal-card-body .field.is-floating-in-label .label:before,
+  .modal-card-body .field.is-floating-in-label .label::before,
+  .modal-card .is-floating-label .label:before,
+  .modal-card .is-floating-label .label::before,
+  .modal-card-body .is-floating-label .label:before,
+  .modal-card-body .is-floating-label .label::before {
+    background-color: #1c1c1c !important;
   }
 
   .input,
@@ -224,22 +332,147 @@ html.theme-dark {
 
   .checkbox,
   .radio {
-    color: #d0d0d0;
+    color: #e0e0e0;
 
     &:hover {
       color: #ffffff;
     }
+
+    .control-label {
+      color: #e0e0e0;
+    }
+
+    .check {
+      border-color: #777777;
+      background-color: #222222;
+    }
+
+    &:hover .check {
+      border-color: #999999;
+    }
+  }
+
+  .b-checkbox.checkbox input[type="checkbox"]:checked + .check {
+    background-color: #7957d5;
+    border-color: #7957d5;
   }
 
   .switch {
-    color: #d0d0d0;
+    color: #e0e0e0;
 
-    input[type="checkbox"] + .check {
-      background: #383838;
+    .control-label {
+      color: #e0e0e0;
     }
 
-    &:hover input[type="checkbox"] + .check {
-      background: #4a4a4a;
+    input[type="checkbox"] + .check,
+    input[type="checkbox"]:not(:checked) + .check {
+      background: #3a3a3a !important;
+      border: 1px solid #555555;
+    }
+
+    &:hover input[type="checkbox"]:not(:checked) + .check {
+      background: #484848 !important;
+      border-color: #777777;
+    }
+
+    input[type="checkbox"]:checked + .check {
+      background: #7957d5 !important;
+      border-color: #7957d5 !important;
+    }
+
+    input[type="checkbox"]:checked + .check.is-primary {
+      background: #7957d5 !important;
+      border-color: #7957d5 !important;
+    }
+
+    input[type="checkbox"]:checked + .check.is-danger {
+      background: #ff3860 !important;
+      border-color: #ff3860 !important;
+    }
+
+    input[type="checkbox"]:checked + .check.is-info {
+      background: #3273dc !important;
+      border-color: #3273dc !important;
+    }
+
+    input[type="checkbox"]:checked + .check.is-success {
+      background: #48c774 !important;
+      border-color: #48c774 !important;
+    }
+
+    input[type="checkbox"]:checked + .check.is-warning {
+      background: #ffdd57 !important;
+      border-color: #ffdd57 !important;
+    }
+
+    input[type="checkbox"]:checked + .check.is-dark {
+      background: #7957d5 !important;
+      border-color: #7957d5 !important;
+    }
+
+    input[type="checkbox"] + .check::before {
+      background: #ffffff !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  .b-radio.radio.button {
+    background-color: #222222;
+    border-color: #3a3a3a;
+    color: #d0d0d0;
+
+    &:hover {
+      background-color: #2c2c2c;
+      color: #ffffff;
+    }
+
+    &.is-selected {
+      background-color: #7957d5 !important;
+      border-color: #7957d5 !important;
+      color: #ffffff !important;
+    }
+  }
+
+  .b-checkbox.checkbox.button {
+    background-color: #222222;
+    border-color: #3a3a3a;
+    color: #d0d0d0;
+
+    &:hover {
+      background-color: #2c2c2c;
+      color: #ffffff;
+    }
+
+    &.is-checked {
+      background-color: #7957d5 !important;
+      border-color: #7957d5 !important;
+      color: #ffffff !important;
+
+      &.is-primary {
+        background-color: #7957d5 !important;
+        border-color: #7957d5 !important;
+      }
+      &.is-danger {
+        background-color: #ff3860 !important;
+        border-color: #ff3860 !important;
+      }
+      &.is-info {
+        background-color: #3273dc !important;
+        border-color: #3273dc !important;
+      }
+    }
+  }
+
+  .b-slider {
+    .b-slider-track {
+      background-color: #333333;
+    }
+    .b-slider-fill {
+      background-color: #7957d5;
+    }
+    .b-slider-thumb {
+      background-color: #ffffff;
+      border-color: #7957d5;
     }
   }
 
@@ -442,7 +675,8 @@ html.theme-dark {
 
     .is-divider[data-content]:after {
       background: #1c1c1c;
-      color: #999999;
+      color: #e0e0e0;
+      font-weight: 600;
     }
   }
 
@@ -503,7 +737,9 @@ html.theme-dark {
 
   // Menus (Options Sidebar)
   .menu-label {
-    color: #888888;
+    color: #b8b8b8;
+    font-weight: 600;
+    letter-spacing: 0.05em;
   }
 
   .menu-list {
@@ -715,20 +951,22 @@ html.theme-dark {
 
   // Dividers & Bulma Extensions
   .is-divider {
-    border-top: 1px solid #282828;
+    border-top: 1px solid #333333;
 
     &[data-content]:after {
       background: #121212;
-      color: #888888;
+      color: #e0e0e0;
+      font-weight: 600;
     }
   }
 
   .is-divider-vertical {
-    border-left: 1px solid #282828;
+    border-left: 1px solid #333333;
 
     &[data-content]:after {
       background: #121212;
-      color: #888888;
+      color: #e0e0e0;
+      font-weight: 600;
     }
   }
 
@@ -762,7 +1000,8 @@ html.theme-dark {
     color: #7957d5 !important;
   }
 
-  a#toTop {
+  #toTop, #toggleInfiniteScroll,
+  a#toTop, a#toggleInfiniteScroll {
     background-color: #2e2e2e !important;
     color: #f1f1f1 !important;
 

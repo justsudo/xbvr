@@ -46,7 +46,7 @@
       </p>
       <hr />
       <b-field>
-        <b-switch v-model="scrapeFunscripts" type="is-default">
+        <b-switch v-model="scrapeFunscripts">
           <strong>Scrape for Available Funscripts</strong>
         </b-switch>
       </b-field>

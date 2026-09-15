@@ -18,18 +18,18 @@
         <div class="column">
           <section>
             <b-field>
-              <b-switch v-model="showInternalSceneId" type="is-default">
+              <b-switch v-model="showInternalSceneId">
                 show Internal Scene Id
               </b-switch>
             </b-field>
             <b-field>
-              <b-switch v-model="showHSPApiLink" type="is-default">
+              <b-switch v-model="showHSPApiLink">
                 show Heresphere Api Link
               </b-switch>
             </b-field>
             <b-field>
               <b-tooltip :label="$t('Only required when troubleshooting search issues, this will enable a Tab in the Scene Details to display what search fields exist and their values for a scene')" :delay="500" type="is-warning">
-              <b-switch v-model="showSceneSearchField" type="is-default">
+              <b-switch v-model="showSceneSearchField">
                 show Scene Search Fields
               </b-switch>
               </b-tooltip>
@@ -45,13 +45,13 @@
         <div class="column">
           <section>
               <b-tooltip :label="$t('Allows the entry of Actor Height/Weight in Imperial measurements')" :delay="500" type="is-warning">
-                <b-switch v-model="useImperialEntry" type="is-default">
+                <b-switch v-model="useImperialEntry">
                   {{ $t('Entry Height/Weight in Imperial Measurements') }}
                 </b-switch>
               </b-tooltip>
             <b-field>
               <b-tooltip :label="$t('Scrape Actor details from sites after running a Scene Scrape, otherwise run manually')" :delay="500" type="is-warning">
-                <b-switch v-model="scrapeActorAfterScene" type="is-default">
+                <b-switch v-model="scrapeActorAfterScene">
                   {{ $t('Scrape Site Actors after Scene Scrape') }}
                 </b-switch>
               </b-tooltip>
@@ -116,21 +116,21 @@
           <section>
             <b-field>
               <b-tooltip :label="$t('Scenes from Alternate Sites will be matched after Scene Scraping')" :delay="500">
-                <b-switch v-model="linkScenesAfterSceneScraping" type="is-default">
+                <b-switch v-model="linkScenesAfterSceneScraping">
                   Link Scenes after Scene Scraping
                 </b-switch>
               </b-tooltip>
             </b-field>
             <b-field>
               <b-tooltip :label="$t('If a file is not matched to a scene, then try scenes from Alternate Sites')" :delay="500">
-                <b-switch v-model="useAltSrcInFileMatching" type="is-default">
+                <b-switch v-model="useAltSrcInFileMatching">
                   Include Scenes from Alternate Sites in File Matching
                 </b-switch>
               </b-tooltip>
             </b-field>
             <b-field>
               <b-tooltip :label="$t('When filtering for Scenes with Scripts or sorting by Script Published Date, scenes from Alternate Sites will be included. Note: Slows these queries')" multiline :delay="500" type="is-warning">
-                <b-switch v-model="useAltSrcInScriptFilters" type="is-default">
+                <b-switch v-model="useAltSrcInScriptFilters">
                   Include Scenes from Alternate Sites when filtering/sorting Scenes for Scripts
                 </b-switch>
               </b-tooltip>

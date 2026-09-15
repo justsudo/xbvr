@@ -117,7 +117,7 @@
   <div>
     <h3 class="title">{{ $t('Options') }}</h3>
     <b-field>
-      <b-switch v-model="match_ohash" type="is-default">
+      <b-switch v-model="match_ohash">
         Match StashDB Hashes
       </b-switch>
     </b-field>
