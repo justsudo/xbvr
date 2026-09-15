@@ -5,8 +5,8 @@
       <div class="column is-one-fifth">
         <Filters/>
 
-        <div id="scrollButtons">
-          <a id="toTop">
+        <div id="scrollButtons" v-show="showScrollButtons">
+          <a id="toTop" @click="scrollToTop">
             <b-icon pack="mdi" icon="navigation" />
           </a>
           <a id="toggleInfiniteScroll" @click="toggleInfiniteScroll" :title="infiniteScrollEnabled ? 'Disable Auto Load More' : 'Enable Auto Load More'">
@@ -32,33 +32,26 @@ export default {
   components: { Filters, List },
   data() {
     return {
-      infiniteScrollEnabled: true
+      infiniteScrollEnabled: true,
+      showScrollButtons: false
     }
   },
   methods: {
     toggleInfiniteScroll() {
       this.infiniteScrollEnabled = !this.infiniteScrollEnabled
+    },
+    handleScroll() {
+      this.showScrollButtons = (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) > 20
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   },
   mounted () {
-    const toTop = document.getElementById('toTop')
-    const toggleBtn = document.getElementById('toggleInfiniteScroll')
-    addEventListener('scroll', function () {
-      const show = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20
-      toTop.style.display = show ? 'block' : 'none'
-      toggleBtn.style.display = show ? 'block' : 'none'
-    })
-    toTop.addEventListener('click', function () {
-      scrollToTop()
-    })
-
-    const scrollToTop = () => {
-      const c = document.documentElement.scrollTop || document.body.scrollTop
-      if (c > 0) {
-        window.requestAnimationFrame(scrollToTop)
-        window.scrollTo(0, c - c / 16)
-      }
-    }
+    window.addEventListener('scroll', this.handleScroll, { passive: true })
+  },
+  beforeDestroy () {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
@@ -90,7 +83,6 @@ export default {
     width: 18.5%;
   }
   #toTop, #toggleInfiniteScroll {
-    display: none;
     background-color: #f0f0f0;
     color: #4a4a4a;
     padding: 15px;

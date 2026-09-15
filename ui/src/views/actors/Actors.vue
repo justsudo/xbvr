@@ -5,7 +5,7 @@
       <div class="column is-one-fifth">
          <Filters/> 
 
-        <a id="toTop">
+        <a id="toTop" v-show="showToTop" @click="scrollToTop">
           <b-icon pack="mdi" icon="navigation" />
         </a>
       </div>
@@ -25,25 +25,25 @@ import List from './List'
 
 export default {
   name: 'Actors',  
-  components: { Filters, List},
-  mounted () {
-    const toTop = document.getElementById('toTop')
-    addEventListener('scroll', function () {
-      toTop.style.display = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20
-        ? 'block'
-        : 'none'
-    })
-    toTop.addEventListener('click', function () {
-      scrollToTop()
-    })
-
-    const scrollToTop = () => {
-      const c = document.documentElement.scrollTop || document.body.scrollTop
-      if (c > 0) {
-        window.requestAnimationFrame(scrollToTop)
-        window.scrollTo(0, c - c / 16)
-      }
+  components: { Filters, List },
+  data () {
+    return {
+      showToTop: false
     }
+  },
+  methods: {
+    handleScroll () {
+      this.showToTop = (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop) > 20
+    },
+    scrollToTop () {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  },
+  mounted () {
+    window.addEventListener('scroll', this.handleScroll, { passive: true })
+  },
+  beforeDestroy () {
+    window.removeEventListener('scroll', this.handleScroll)
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
@@ -69,7 +69,6 @@ export default {
 
 <style scoped>
   #toTop {
-    display: none;
     position: fixed;
     bottom: 20px;
     left: 30px;
