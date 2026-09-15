@@ -1,7 +1,7 @@
-FROM ubuntu:24.04
+FROM debian:bookworm-slim
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends python3 ca-certificates && \
+    apt-get install -y --no-install-recommends ca-certificates tzdata && \
     rm -rf /var/lib/apt/lists/*
 
 COPY xbvr /usr/bin/xbvr
