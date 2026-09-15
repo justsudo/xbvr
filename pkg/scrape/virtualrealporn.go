@@ -4,37 +4,34 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"image"
-	// image.Decode below only recognises formats whose decoder has been registered.
-	// This package registers none of its own, so cover validation silently rejected
-	// every image except in builds that happened to pull in a decoder elsewhere.
-	_ "image/gif"
-	_ "image/jpeg"
-	_ "image/png"
+	"net/url"
 	"strconv"
 	"strings"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly/v2"
 	"github.com/mozillazg/go-slugify"
-	"github.com/thoas/go-funk"
 	"github.com/xbapps/xbvr/pkg/models"
 )
+
+func isKnownVirtualRealScene(knownScenes []string, sceneURL string) bool {
+	cleanURL := strings.TrimSuffix(sceneURL, "/")
+	legacyURL := strings.Replace(cleanURL, "/vr-porn-video/", "/", 1)
+	for _, k := range knownScenes {
+		cleanK := strings.TrimSuffix(k, "/")
+		if cleanK == cleanURL || cleanK == legacyURL {
+			return true
+		}
+	}
+	return false
+}
 
 func VirtualRealPornSite(wg *models.ScrapeWG, updateSite bool, knownScenes []string, out chan<- models.ScrapedScene, singleSceneURL string, scraperID string, siteID string, URL string, singeScrapeAdditionalInfo string, limitScraping bool) error {
 	defer wg.Done()
 	logScrapeStart(scraperID, siteID)
-	page := 1
 
-	// Covers and gallery images are served from static.virtualrealhub.com (new site CDN)
-	imageCollector := createCollector("virtualrealporn.com", "virtualrealtrans.com", "virtualrealgay.com", "virtualrealpassion.com", "virtualrealamateurporn.com", "static.virtualrealhub.com")
 	sceneCollector := createCollector("virtualrealporn.com", "virtualrealtrans.com", "virtualrealgay.com", "virtualrealpassion.com", "virtualrealamateurporn.com")
 	siteCollector := createCollector("virtualrealporn.com", "virtualrealtrans.com", "virtualrealgay.com", "virtualrealpassion.com", "virtualrealamateurporn.com")
-
-	imageCollector.OnResponse(func(r *colly.Response) {
-		if _, _, err := image.Decode(bytes.NewReader(r.Body)); err == nil {
-			r.Ctx.Put("valid", "1")
-		}
-	})
 
 	sceneCollector.OnHTML(`html`, func(e *colly.HTMLElement) {
 		sc := models.ScrapedScene{}
@@ -62,11 +59,8 @@ func VirtualRealPornSite(wg *models.ScrapeWG, updateSite bool, knownScenes []str
 		e.ForEach(`meta[property="og:image"]`, func(id int, e *colly.HTMLElement) {
 			if len(sc.Covers) == 0 {
 				u := strings.Split(e.Request.AbsoluteURL(e.Attr("content")), "?")[0]
-				ctx := colly.NewContext()
-				if err := imageCollector.Request("GET", u, nil, ctx, nil); err == nil {
-					if ctx.Get("valid") != "" {
-						sc.Covers = append(sc.Covers, u)
-					}
+				if u != "" {
+					sc.Covers = append(sc.Covers, u)
 				}
 			}
 		})
@@ -213,24 +207,46 @@ func VirtualRealPornSite(wg *models.ScrapeWG, updateSite bool, knownScenes []str
 	})
 
 	// Scene listing - new site uses a.data-title links, paginated via ?page=N on /videos/ path
-	siteCollector.OnHTML(`a.data-title`, func(e *colly.HTMLElement) {
-		sceneURL := strings.Split(e.Request.AbsoluteURL(e.Attr("href")), "?")[0]
-
-		// On first scene of each page, queue next page (before visiting scenes)
-		if e.Index == 0 && !limitScraping {
-			page++
-			siteCollector.Visit(fmt.Sprintf("%svideos/?page=%v", URL, page))
+	siteCollector.OnResponse(func(r *colly.Response) {
+		doc, err := goquery.NewDocumentFromReader(bytes.NewReader(r.Body))
+		if err != nil {
+			return
 		}
 
-		if !funk.ContainsString(knownScenes, sceneURL) {
-			sceneCollector.Visit(sceneURL)
+		var sceneURLs []string
+		doc.Find("a.data-title").Each(func(i int, s *goquery.Selection) {
+			if href, ok := s.Attr("href"); ok {
+				u := strings.Split(r.Request.AbsoluteURL(href), "?")[0]
+				if u != "" {
+					sceneURLs = append(sceneURLs, u)
+				}
+			}
+		})
+
+		for _, sceneURL := range sceneURLs {
+			if !isKnownVirtualRealScene(knownScenes, sceneURL) {
+				sceneCollector.Visit(sceneURL)
+			}
+		}
+
+		if len(sceneURLs) > 0 && !limitScraping {
+			currPage := 1
+			if u, err := url.Parse(r.Request.URL.String()); err == nil {
+				if pStr := u.Query().Get("page"); pStr != "" {
+					if pInt, err := strconv.Atoi(pStr); err == nil {
+						currPage = pInt
+					}
+				}
+			}
+			nextPageURL := fmt.Sprintf("%svideos/?page=%d", URL, currPage+1)
+			siteCollector.Visit(nextPageURL)
 		}
 	})
 
 	if singleSceneURL != "" {
 		sceneCollector.Visit(singleSceneURL)
 	} else {
-		siteCollector.Visit(fmt.Sprintf("%svideos/?page=%v", URL, page))
+		siteCollector.Visit(fmt.Sprintf("%svideos/?page=1", URL))
 	}
 
 	if updateSite {

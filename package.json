@@ -70,6 +70,8 @@
   "resolutions": {
     "@achrinza/node-ipc": "9.2.10",
     "shell-quote": "^1.8.5",
+    "loader-utils": "^2.0.4",
+    "websocket-driver": "^0.7.5",
     "serialize-javascript": "^7.0.5",
     "cross-spawn": "^7.0.6",
     "qs": "^6.15.4"
