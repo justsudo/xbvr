@@ -2,6 +2,12 @@
 <br>
 <sup><sub><em>Windows • macOS • Linux • Raspberry Pi</em></sub></sup>
 
+> **Note**  
+> This is a maintained fork of [xbapps/xbvr](https://github.com/xbapps/xbvr) featuring:
+> - 🌓 **Dark Theme**: Comprehensive dark mode support with an instant navbar theme toggle.
+> - 🛠️ **Scraper Updates & Fixes**: Up-to-date scrapers and bug fixes for VirtualRealPorn, SexLikeReal, SexBabesVR, FuckPassVR, VRPorn, CzechVR, VRSpy, and more.
+> - ⚡ **Modernized Stack & Improvements**: Migrated to `pnpm`, upgraded Docker base to Ubuntu 24.04 LTS, Node 24 support, and UI performance optimizations.
+
 <h1 align="center">
     <img src="https://i.imgur.com/T2UvcHc.png" width="250"/>
 </h1>

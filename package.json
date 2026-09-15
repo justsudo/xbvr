@@ -1,6 +1,7 @@
 {
   "name": "xbvr",
   "private": true,
+  "packageManager": "pnpm@12.4.1",
   "scripts": {
     "serve": "cd ui && vue-cli-service serve",
     "build": "cd ui && vue-cli-service build",
