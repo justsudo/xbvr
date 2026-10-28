@@ -79,7 +79,7 @@ Ask your questions and suggest features on [Discord](https://discord.gg/wdCHXAG)
 
 Make sure you have following installed:
 
-- Go 1.26 or newer (`go.mod` requires 1.26.0)
+- Go 1.27 or newer (`go.mod` requires 1.27.3)
 - Node.js 24.x
 - pnpm
 - A C compiler — the SQLite driver is cgo-based. On Debian/Ubuntu `sudo apt install build-essential`, on macOS `xcode-select --install`, on Windows a MinGW-w64 toolchain.
