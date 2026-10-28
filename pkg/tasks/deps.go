@@ -1,14 +1,15 @@
 package tasks
 
 import (
+	"archive/zip"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/mholt/archiver"
 	"github.com/pkg/errors"
 	"github.com/tidwall/gjson"
 	"github.com/xbapps/xbvr/pkg/common"
@@ -94,7 +95,7 @@ func downloadFfbinaries(tool string) error {
 		return err
 	}
 
-	err = archiver.Unarchive(filepath.Join(common.BinDir, tool+".zip"), common.BinDir)
+	err = unzip(filepath.Join(common.BinDir, tool+".zip"), common.BinDir)
 	if err != nil {
 		return err
 	}
@@ -126,5 +127,52 @@ func downloadFile(url, destPath string) error {
 		return err
 	}
 
+	return nil
+}
+
+func unzip(src, dest string) error {
+	r, err := zip.OpenReader(src)
+	if err != nil {
+		return err
+	}
+	defer r.Close()
+
+	cleanDest := filepath.Clean(dest) + string(os.PathSeparator)
+
+	for _, f := range r.File {
+		fpath := filepath.Join(dest, f.Name)
+		if !strings.HasPrefix(filepath.Clean(fpath), filepath.Clean(dest)) && !strings.HasPrefix(fpath, cleanDest) {
+			return errors.Errorf("illegal file path: %s", fpath)
+		}
+
+		if f.FileInfo().IsDir() {
+			if err := os.MkdirAll(fpath, os.ModePerm); err != nil {
+				return err
+			}
+			continue
+		}
+
+		if err := os.MkdirAll(filepath.Dir(fpath), os.ModePerm); err != nil {
+			return err
+		}
+
+		outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+		if err != nil {
+			return err
+		}
+
+		rc, err := f.Open()
+		if err != nil {
+			outFile.Close()
+			return err
+		}
+
+		_, err = io.Copy(outFile, rc)
+		outFile.Close()
+		rc.Close()
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
