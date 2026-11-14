@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 jobs:
   build-and-publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
@@ -48,6 +48,8 @@ jobs:
           echo "UI build directory:"
           ls -la ./ui/dist/ || true
       - name: Build Go binary
+        env:
+          CGO_CFLAGS: "-march=x86-64 -mtune=generic"
         run: |
           echo "Building Go binary..."
           go build -o xbvr -v .
